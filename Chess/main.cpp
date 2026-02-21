@@ -3,43 +3,43 @@
 #include <GL/glut.h>
 
 const int boardSize = 8;
-const int squareSize = 40;   // 8 * 40 = 320 (fits inside 400)
+const int squareSize = 50;
 
 void init() {
-    glClearColor(0.5f, 0.5f, 0.5f, 0.0f); // Gray background
+    glClearColor(0.5f, 0.5f, 0.5f, 0.0f);  s
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0.0, 320.0, 0.0, 320.0);
+    gluOrtho2D(0 , 400 , 0 , 400);
 }
 
-void drawSquare(float x, float y, float size) {
-    glBegin(GL_QUADS);
-        glVertex2f(x, y);
-        glVertex2f(x + size, y);
-        glVertex2f(x + size, y + size);
-        glVertex2f(x, y + size);
-    glEnd();
-}
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    float startX = 40.0f; // margin from edge
-    float startY = 40.0f;
+    float x, y = 0;
 
-    for (int row = 0; row < boardSize; row++) {
-        for (int col = 0; col < boardSize; col++) {
+    for(int row = 0; row < boardSize; row++) {
 
-            // Color logic
-            if ((row + col) % 2 == 0)
-                glColor3f(1.0f, 1.0f, 1.0f); // white
+        x = 0;
+
+        for(int col = 0; col < boardSize; col++) {
+
+
+            if((row + col) % 2 == 0)
+                glColor3f(1,1,1);
             else
-                glColor3f(0.0f, 0.0f, 0.0f); // black
+                glColor3f(0,0,0);
 
-            float x = startX + col * squareSize;
-            float y = startY + row * squareSize;
+            glBegin(GL_QUADS);
+                glVertex2f(x, y);
+                glVertex2f(x + squareSize, y);
+                glVertex2f(x + squareSize, y + squareSize);
+                glVertex2f(x, y + squareSize);
+            glEnd();
 
-            drawSquare(x, y, squareSize);
+            x += squareSize;
         }
+
+        y += squareSize;
     }
 
     glFlush();
@@ -47,12 +47,10 @@ void display() {
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitWindowSize(500, 500);
-    glutInitWindowPosition(200, 100);
-    glutCreateWindow("Stable OpenGL Shapes");
+    glutInitWindowSize(400, 400);
+    glutCreateWindow("Chessboard");
 
     init();
-
     glutDisplayFunc(display);
     glutMainLoop();
     return 0;
