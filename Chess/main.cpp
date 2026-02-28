@@ -6,7 +6,7 @@ const int boardSize = 8;
 const int squareSize = 50;
 
 void init() {
-    glClearColor(0.5f, 0.5f, 0.5f, 0.0f);  s
+    glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0 , 400 , 0 , 400);
