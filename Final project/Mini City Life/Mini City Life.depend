@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1777172717 source:e:\repository\computer_graphics\final project\mini city life\main.cpp
+1777174897 source:e:\repository\computer_graphics\final project\mini city life\main.cpp
 	<iostream>
 	<GL/gl.h>
 	<GL/glut.h>

@@ -7,13 +7,25 @@
 float cloudMove = 0.0f;
 
 /// circle
-void drawCircle(float cx, float cy, float r) {
+void drawCircle(float cirX, float cirY, float r)
+{
+    glPushMatrix();
+    glTranslatef(cirX, cirY, 0.0f);
+
     glBegin(GL_POLYGON);
-    for (int i = 0; i < 40; i++) {
-        float a = 2 * 3.1416 * i / 40;
-        glVertex2f(cx + r * cos(a), cy + r * sin(a));
+
+    for(int i = 0; i < 360; i++) {
+        float pi = 3.1416;
+        float A = (i * pi) / 180;
+
+        float x = r * cos(A);
+        float y = r * sin(A);
+
+        glVertex2f(x, y);
     }
+
     glEnd();
+    glPopMatrix();
 }
 
 /// SKY
@@ -48,7 +60,9 @@ void cloud() {
 
 /// GROUND
 void ground() {
-    glColor3ub(200, 230, 150);
+
+    glColor3ub(34, 139, 34);
+
     glBegin(GL_QUADS);
     glVertex2f(0, 10);
     glVertex2f(25, 10);
@@ -57,37 +71,118 @@ void ground() {
     glEnd();
 }
 
-/// ROAD
 void road() {
-    glColor3ub(80, 80, 80);
+    /// road base (dark asphalt color)
+    glColor3ub(50, 50, 50);
     glBegin(GL_QUADS);
     glVertex2f(0, 4);
     glVertex2f(25, 4);
     glVertex2f(25, 0);
     glVertex2f(0, 0);
     glEnd();
+
+    /// middle white line
+    glColor3ub(255, 255, 255);
+    glLineWidth(3);
+
+    glBegin(GL_LINES);
+    glVertex2f(0, 2);
+    glVertex2f(25, 2);
+    glEnd();
 }
 
-/// TREE
-void tree() {
-    glColor3ub(120, 80, 40);
+/// TRIANGLE TREE
+void treeUsingTriangle() {
+
+    glColor3f(0.55f, 0.27f, 0.07f);
     glBegin(GL_QUADS);
-    glVertex2f(5, 7);
-    glVertex2f(5.3, 7);
-    glVertex2f(5.3, 9);
-    glVertex2f(5, 9);
+    glVertex2f(12, 7);
+    glVertex2f(12.3, 7);
+    glVertex2f(12.3, 9);
+    glVertex2f(12, 9);
     glEnd();
 
-    glColor3ub(34, 139, 34);
+    glColor3f(0.0f, 0.5f, 0.0f);
+
     glBegin(GL_TRIANGLES);
-    glVertex2f(4.3, 9);
-    glVertex2f(5.15, 10.5);
-    glVertex2f(6, 9);
+
+    // bottom
+    glVertex2f(11.5, 9);
+    glVertex2f(13, 9);
+    glVertex2f(12.25, 10.5);
+
+    // middle
+    glVertex2f(11.7, 10);
+    glVertex2f(12.8, 10);
+    glVertex2f(12.25, 11.5);
+
+    // top
+    glVertex2f(11.9, 11);
+    glVertex2f(12.6, 11);
+    glVertex2f(12.25, 12.5);
+
     glEnd();
 }
 
-void building() {
+/// HOUSE
+void house() {
 
+    /// main body (wall)
+    glColor3ub(210, 180, 140);
+    glBegin(GL_QUADS);
+    glVertex2f(15, 7);
+    glVertex2f(18, 7);
+    glVertex2f(18, 10);
+    glVertex2f(15, 10);
+    glEnd();
+
+    /// roof
+    glColor3ub(139, 69, 19);
+    glBegin(GL_TRIANGLES);
+    glVertex2f(14.5, 10);
+    glVertex2f(18.5, 10);
+    glVertex2f(16.75, 12);
+    glEnd();
+
+    /// door
+    glColor3ub(101, 67, 33);
+    glBegin(GL_QUADS);
+    glVertex2f(16.2, 7);
+    glVertex2f(16.8, 7);
+    glVertex2f(16.8, 8.5);
+    glVertex2f(16.2, 8.5);
+    glEnd();
+
+    /// door
+    glColor3ub(255, 215, 0);
+    drawCircle(16.7, 7.8, 0.05);
+
+    /// left window
+    glColor3ub(173, 216, 230);
+    glBegin(GL_QUADS);
+    glVertex2f(15.3, 8.5);
+    glVertex2f(15.9, 8.5);
+    glVertex2f(15.9, 9.3);
+    glVertex2f(15.3, 9.3);
+    glEnd();
+
+    /// right window
+    glBegin(GL_QUADS);
+    glVertex2f(17.1, 8.5);
+    glVertex2f(17.7, 8.5);
+    glVertex2f(17.7, 9.3);
+    glVertex2f(17.1, 9.3);
+    glEnd();
+
+    /// window border lines
+    glColor3ub(0, 0, 0);
+    glLineWidth(2);
+
+
+}
+
+/// BUILDING
+void building() {
     glColor3ub(100, 149, 237);
     glBegin(GL_QUADS);
     glVertex2f(8, 7);
@@ -105,7 +200,6 @@ void building() {
     glVertex2f(8, 10.4);
     glVertex2f(10.5, 10.4);
     glEnd();
-
 }
 
 /// UPDATE
@@ -126,8 +220,10 @@ void display() {
     cloud();
     ground();
     road();
-    tree();
+
     building();
+    treeUsingTriangle();
+    house();
 
     glFlush();
 }
@@ -140,7 +236,7 @@ void init() {
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitWindowSize(1000, 600);
-    glutCreateWindow("BOgura Scene Updated");
+    glutCreateWindow("Bogura Scene Updated");
 
     init();
 
