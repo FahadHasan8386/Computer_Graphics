@@ -1,1074 +1,457 @@
-﻿#include <iostream>
-#include <cstdlib>
-#include <cmath>
-#include <fstream>
-#include <windows.h>
-#include <GL/gl.h>
-#include <GL/glut.h>
+﻿#include <GL/glut.h>
 #include <math.h>
-
-#define PI 3.1416
+#include <stdlib.h>
 
 bool isNight = false;
-
-// Draw circle for tree leafs
-void drawCircle(float cx, float cy, float r, int segments) {
-    glBegin(GL_TRIANGLE_FAN);
-    for (int i = 0; i <= segments; ++i) {
-        float angle = 2.0f * PI * i / segments;
-        float x = r * cosf(angle);
-        float y = r * sinf(angle);
-        glVertex2f(cx + x, cy + y);
-    }
-    glEnd();
-}
-
-
-void drawRoads() {
-
-    //vertical road
-    glColor3f(0.5f, 0.5f, 0.5f);
-    glBegin(GL_QUADS);
-    glVertex2f(60, 0);
-    glVertex2f(60, 20);
-    glVertex2f(40, 20);
-    glVertex2f(40, 0);
-    glEnd();
-
-    //horizontal road
-    glBegin(GL_QUADS);
-    glVertex2f(0, 20);
-    glVertex2f(100, 20);
-    glVertex2f(100, 45);
-    glVertex2f(0, 45);
-    glEnd();
-
-    //road Horizontal divider
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glBegin(GL_QUADS);
-    glVertex2f(0, 32);
-    glVertex2f(100, 32);
-    glVertex2f(100, 34);
-    glVertex2f(0, 34);
-    glEnd();
-
-    //road verticla divider
-    glBegin(GL_QUADS);
-    glVertex2f(49, 0);
-    glVertex2f(51, 0);
-    glVertex2f(51, 20);
-    glVertex2f(49, 20);
-    glEnd();
-
-    //upeer road sign
-    for (int x = 10; x <= 100; x += 20) {
-        glColor3f(1.0f, 1.0f, 1.0f);
-        glBegin(GL_QUADS);
-        glVertex2f(x, 38);//10,38
-        glVertex2f(x+10, 38);//20,38
-        glVertex2f(x+10, 40);//20,40
-        glVertex2f(x, 40);//10,40
-        glEnd();
-
-    }
-
-    //lower road sign
-    for (int x = 0; x <= 100; x += 20) {
-        glColor3f(1.0f, 1.0f, 1.0f);
-        glBegin(GL_QUADS);
-        glVertex2f(x, 26);//0,26
-        glVertex2f(x + 10, 26);//10,28
-        glVertex2f(x + 10, 28);//10,28
-        glVertex2f(x, 28);//0,28
-        glEnd();
-
-    }
-
-}
-
-void roadBorder() {
-
-    //left side Horizontal border for SM
-    glColor3f(0.0f, 0.0f, 0.0f);
-    glBegin(GL_QUADS);
-    glVertex2f(0, 20);
-    glVertex2f(40, 20);
-    glVertex2f(40, 22);
-    glVertex2f(0, 22);
-    glEnd();
-
-    for (int x = 0; x < 40; x += 4) {
-
-        glColor3f(0.647f, 0.165f, 0.165f);
-        glBegin(GL_LINE_LOOP);
-        glVertex2f(x, 20);
-        glVertex2f(x+4, 20);
-        glVertex2f(x+4, 22);
-        glVertex2f(x, 22);
-        glEnd();
-    }
-
-    //Right side Horizontal border for forest
-    glColor3f(0.0f, 0.0f, 0.0f);
-    glBegin(GL_QUADS);
-    glVertex2f(60, 20);
-    glVertex2f(100, 20);
-    glVertex2f(100, 22);
-    glVertex2f(60, 22);
-    glEnd();
-
-    for (int x = 60; x < 100; x += 4) {
-
-        glColor3f(0.647f, 0.165f, 0.165f);
-        glBegin(GL_LINE_LOOP);
-        glVertex2f(x, 20);
-        glVertex2f(x + 4, 20);
-        glVertex2f(x + 4, 22);
-        glVertex2f(x, 22);
-        glEnd();
-    }
-
-    //left side Birtical border for SM
-    glColor3f(0.0f, 0.0f, 0.0f);
-    glBegin(GL_QUADS);
-    glVertex2f(38, 0);
-    glVertex2f(40, 0);
-    glVertex2f(40, 20);
-    glVertex2f(38, 20);
-    glEnd();
-
-    for (int y = 0; y < 20; y += 4) {
-
-        glColor3f(0.647f, 0.165f, 0.165f);
-        glBegin(GL_LINE_LOOP);
-        glVertex2f(38, y);//38,0
-        glVertex2f(40, y);//40,0
-        glVertex2f(40, y+4);//40,4
-        glVertex2f(38, y+4);//38,4
-        glEnd();
-    }
-
-    //Righ side Birtical border for Forest
-    glColor3f(0.0f, 0.0f, 0.0f);
-    glBegin(GL_QUADS);
-    glVertex2f(60, 0);
-    glVertex2f(62, 0);
-    glVertex2f(62, 20);
-    glVertex2f(60, 20);
-    glEnd();
-
-    for (int y = 0; y < 20; y += 4) {
-
-        glColor3f(0.647f, 0.165f, 0.165f);
-        glBegin(GL_LINE_LOOP);
-        glVertex2f(60, y);//60,0
-        glVertex2f(62, y);//62,0
-        glVertex2f(62, y + 4);//62,4
-        glVertex2f(60, y + 4);//60,4
-        glEnd();
-    }
-
-}
-
-
-void drawSky(double r, double g, double b) {
-
-    glColor3f(r,g,b);
-    glBegin(GL_QUADS);
-    glVertex2f(0, 50);
-    glVertex2f(100, 50);
-    glVertex2f(100, 80);
-    glVertex2f(0, 80);
-    glEnd();
-}
-
-
-//------All sky element-------------
-void drawStars() {
-    glColor3f(1.0f, 1.0f, 1.0f); // White stars
-    srand(42);
-
-    for (int i = 0; i < 100; i++) {
-        float x = rand() % 100;
-        float y = 60 + rand() % 40;
-        drawCircle(x, y, 0.2, 100);
-    }
-}
-
-void drawSun(float x, float y, float radius) {
-    // Main sun body
-    glColor3f(1.0f, 0.843f, 0.0f);
-    drawCircle(x, y, radius, 100);
-
-    // Sun glow effect
-    glColor4f(1.0f, 0.843f, 0.0f, 0.3f);
-    drawCircle(x, y, radius * 1.5f, 100);
-}
-
-void drawCrescentMoon(float x, float y, float radius) {
-    // Full moon base (bright)
-    glColor3f(1.0f, 1.0f, 0.8f);  // pale yellow
-    drawCircle(x, y, radius, 100);
-
-    // Overlapping circle to form crescent
-    glColor3f(0.05f, 0.05f, 0.2f); // night sky color (to "cut" moon)
-    drawCircle(x + radius * 0.2f, y + radius * 0.1f, radius * 0.85f, 100);
-}
-
-//clouds global variable
-double cloudX1 = 10;
-double cloudX2 = 80;
-double cloudX3 = 50;
-
-void drawCloud(float x, float y, float scale, float r, float g, float b) {
-    glColor3f(r, g, b); // Set cloud color
-
-    drawCircle(x, y, 4.0f * scale, 100);
-    drawCircle(x + 3.0f * scale, y + 1.0f * scale, 4.5f * scale, 100);
-    drawCircle(x + 6.0f * scale, y, 4.0f * scale, 100);
-    drawCircle(x + 3.0f * scale, y - 1.5f * scale, 4.0f * scale, 100);
-}
-
-void updateClouds(int value) {
-    cloudX1 += 0.2;
-    cloudX2 -= 0.4;
-    cloudX3 += 0.3;
-
-    // Reset positions further left so clouds enter smoothly
-    if (cloudX1 > 110.0f) cloudX1 = -30.0f;
-    if (cloudX2 < -20.0f) cloudX2 = +120.0f;
-    if (cloudX3 > 110.0f) cloudX3 = -35.0f;
-
-    glutPostRedisplay();
-    glutTimerFunc(30, updateClouds, 0);
-}
-
-//Plans global variable
-float planeX = -20.0f;
-float planeSpeed = 0.2f;
-
-float planeX2 = 120.0f;
-float planeSpeed2 = 0.4f;
-
-void drawPlane() {
-    glPushMatrix();
-    glTranslatef(planeX, 73.0f, 0.0f); // Bottom Y = 73
-    glScalef(0.4, 0.4, 0);
-
-    // --- MAIN BODY  ---
-
-    // Fuselage - White
-    glColor3f(1.0f, 1.0f, 1.0f); // Pure white
-    glBegin(GL_POLYGON);
-    glVertex2f(0.0f, 0.0f);
-    glVertex2f(10.0f, 0.0f);
-    glVertex2f(10.0f, 2.0f);
-    glVertex2f(0.0f, 2.0f);
-    glEnd();
-
-    // Blue cheat line
-    glColor3f(0.0f, 0.4f, 0.8f); // Airbus blue
-    glBegin(GL_POLYGON);
-    glVertex2f(0.0f, 1.8f);
-    glVertex2f(10.0f, 1.8f);
-    glVertex2f(10.0f, 2.0f);
-    glVertex2f(0.0f, 2.0f);
-    glEnd();
-
-    // Tail - Blue with red tip
-    glColor3f(0.0f, 0.4f, 0.8f); // Airbus blue
-    glBegin(GL_POLYGON);
-    glVertex2f(0.0f, 2.0f);
-    glVertex2f(2.0f, 2.0f);
-    glVertex2f(1.0f, 4.0f);
-    glVertex2f(0.0f, 4.0f);
-    glEnd();
-
-    // Tail tip - Red
-    glColor3f(0.9f, 0.1f, 0.1f); // Red tip
-    glBegin(GL_TRIANGLES);
-    glVertex2f(0.0f, 3.5f);
-    glVertex2f(0.5f, 3.5f);
-    glVertex2f(0.25f, 4.0f);
-    glEnd();
-
-    // Tail logo area
-    glColor3f(0.8f, 0.8f, 0.8f); // Light gray
-    glBegin(GL_TRIANGLES);
-    glVertex2f(0.5f, 2.5f);
-    glVertex2f(1.0f, 2.5f);
-    glVertex2f(0.75f, 3.0f);
-    glEnd();
-
-    // Nose - Gray with blue tip
-    glColor3f(0.7f, 0.7f, 0.7f); // Gray nose
-    glBegin(GL_TRIANGLES);
-    glVertex2f(10.0f, 0.0f);
-    glVertex2f(12.0f, 1.0f);
-    glVertex2f(10.0f, 2.0f);
-    glEnd();
-
-    // Nose tip - Blue
-    glColor3f(0.0f, 0.4f, 0.8f);
-    glBegin(GL_TRIANGLES);
-    glVertex2f(11.0f, 0.8f);
-    glVertex2f(11.5f, 1.0f);
-    glVertex2f(11.0f, 1.2f);
-    glEnd();
-
-    // Cockpit windows - Black
-    glColor3f(0.1f, 0.1f, 0.1f);
-    glBegin(GL_POLYGON);
-    glVertex2f(9.2f, 1.0f);
-    glVertex2f(9.8f, 1.0f);
-    glVertex2f(9.8f, 1.6f);
-    glVertex2f(9.2f, 1.6f);
-    glEnd();
-
-    // Engine nacelles (under wings)
-    glColor3f(0.3f, 0.3f, 0.3f); // Dark gray engines
-    // Left engine
-    glBegin(GL_POLYGON);
-    glVertex2f(4.5f, -0.5f);
-    glVertex2f(6.5f, -0.5f);
-    glVertex2f(6.5f, 0.0f);
-    glVertex2f(4.5f, 0.0f);
-    glEnd();
-
-    // Right engine
-    glBegin(GL_POLYGON);
-    glVertex2f(4.5f, 2.0f);
-    glVertex2f(6.5f, 2.0f);
-    glVertex2f(6.5f, 2.5f);
-    glVertex2f(4.5f, 2.5f);
-    glEnd();
-
-    // Engine details - Silver rings
-    glColor3f(0.8f, 0.8f, 0.9f); // Silver
-    // Bottom engine ring
-    glBegin(GL_POLYGON);
-    glVertex2f(4.7f, -0.5f);
-    glVertex2f(6.3f, -0.5f);
-    glVertex2f(6.3f, -0.4f);
-    glVertex2f(4.7f, -0.4f);
-    glEnd();
-
-    // Top engine ring
-    glBegin(GL_POLYGON);
-    glVertex2f(4.7f, 2.5f);
-    glVertex2f(6.3f, 2.5f);
-    glVertex2f(6.3f, 2.4f);
-    glVertex2f(4.7f, 2.4f);
-    glEnd();
-
-    // Bottom Wing - Blue with white stripe
-    glColor3f(0.0f, 0.4f, 0.8f); // Airbus blue
-    glBegin(GL_QUADS);
-    glVertex2f(5.0f, 0.0f);
-    glVertex2f(4.0f, -3.0f);
-    glVertex2f(5.0f, -3.0f);
-    glVertex2f(7.0f, 0.0f);
-    glEnd();
-
-    // Bottom wing stripe - White
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glBegin(GL_POLYGON);
-    glVertex2f(5.2f, -1.0f);
-    glVertex2f(4.8f, -2.0f);
-    glVertex2f(5.2f, -2.0f);
-    glVertex2f(5.8f, -1.0f);
-    glEnd();
-
-    // Top Wing - Blue with white stripe
-    glColor3f(0.0f, 0.4f, 0.8f); // Airbus blue
-    glBegin(GL_QUADS);
-    glVertex2f(5.0f, 2.0f);
-    glVertex2f(3.0f, 4.0f);
-    glVertex2f(4.0f, 4.0f);
-    glVertex2f(6.0f, 2.0f);
-    glEnd();
-
-    // Top wing stripe - White
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glBegin(GL_POLYGON);
-    glVertex2f(4.8f, 3.0f);
-    glVertex2f(3.8f, 3.8f);
-    glVertex2f(4.2f, 3.8f);
-    glVertex2f(5.2f, 3.0f);
-    glEnd();
-
-    // Winglets (wing tips) - Blue
-    // Bottom winglet
-    glColor3f(0.0f, 0.4f, 0.8f);
-    glBegin(GL_TRIANGLES);
-    glVertex2f(4.0f, -3.0f);
-    glVertex2f(3.5f, -3.5f);
-    glVertex2f(4.0f, -3.5f);
-    glEnd();
-
-    // Top winglet
-    glBegin(GL_TRIANGLES);
-    glVertex2f(3.0f, 4.0f);
-    glVertex2f(2.5f, 4.5f);
-    glVertex2f(3.0f, 4.5f);
-    glEnd();
-
-    // Windows
-    glColor3f(0.2f, 0.5f, 0.8f);
-
-    // Window frames
-    glColor3f(0.1f, 0.1f, 0.1f); // Black frames
-    float windowSpacing = 1.5f;
-
-    for (int i = 0; i < 6; i++) {
-        float xPos = 2.0f + i * windowSpacing;
-        if (xPos < 8.5f) {
-            glBegin(GL_LINE_LOOP);
-            glVertex2f(xPos, 0.5f);
-            glVertex2f(xPos + 0.8f, 0.5f);
-            glVertex2f(xPos + 0.8f, 1.5f);
-            glVertex2f(xPos, 1.5f);
-            glEnd();
-
-            // Window glass
-            glColor3f(0.2f, 0.5f, 0.8f);
-            glBegin(GL_POLYGON);
-            glVertex2f(xPos + 0.1f, 0.6f);
-            glVertex2f(xPos + 0.7f, 0.6f);
-            glVertex2f(xPos + 0.7f, 1.4f);
-            glVertex2f(xPos + 0.1f, 1.4f);
-            glEnd();
-
-            glColor3f(0.1f, 0.1f, 0.1f); // Reset to black for frames
-        }
-    }
-
-    // Landing gear (simplified)
-    glColor3f(0.4f, 0.4f, 0.4f); // Gray gear
-    // Front gear
-    glBegin(GL_POLYGON);
-    glVertex2f(8.5f, -0.3f);
-    glVertex2f(9.0f, -0.3f);
-    glVertex2f(9.0f, 0.0f);
-    glVertex2f(8.5f, 0.0f);
-    glEnd();
-
-    // Main gear (under wings)
-    glBegin(GL_POLYGON);
-    glVertex2f(4.5f, -0.3f);
-    glVertex2f(5.5f, -0.3f);
-    glVertex2f(5.5f, 0.0f);
-    glVertex2f(4.5f, 0.0f);
-    glEnd();
-
-    // Logo/registration on fuselage
-    glColor3f(0.0f, 0.4f, 0.8f); // Airbus blue
-    glBegin(GL_POLYGON);
-    glVertex2f(3.0f, 1.9f);
-    glVertex2f(4.0f, 1.9f);
-    glVertex2f(4.0f, 1.95f);
-    glVertex2f(3.0f, 1.95f);
-    glEnd();
-
-    glPopMatrix();
-}
-
-// Second plane moving opposite direction
-void drawPlane2(float y_pos) {
-    glPushMatrix();
-    glTranslatef(planeX2, y_pos, 0.0f);
-    glScalef(-0.4, 0.4, 0); // Scaled and flipped horizontally
-
-    // --- MAIN BODY  ---
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glBegin(GL_POLYGON);
-    glVertex2f(0.0f, 0.0f);
-    glVertex2f(10.0f, 0.0f);
-    glVertex2f(10.0f, 2.0f);
-    glVertex2f(0.0f, 2.0f);
-    glEnd();
-
-    // Blue cheat line
-    glColor3f(0.0f, 0.4f, 0.8f);
-    glBegin(GL_POLYGON);
-    glVertex2f(0.0f, 1.8f);
-    glVertex2f(10.0f, 1.8f);
-    glVertex2f(10.0f, 2.0f);
-    glVertex2f(0.0f, 2.0f);
-    glEnd();
-
-    // Tail
-    glColor3f(0.0f, 0.4f, 0.8f);
-    glBegin(GL_POLYGON);
-    glVertex2f(0.0f, 2.0f);
-    glVertex2f(2.0f, 2.0f);
-    glVertex2f(1.0f, 4.0f);
-    glVertex2f(0.0f, 4.0f);
-    glEnd();
-
-    // Tail tip
-    glColor3f(0.9f, 0.1f, 0.1f);
-    glBegin(GL_TRIANGLES);
-    glVertex2f(0.0f, 3.5f);
-    glVertex2f(0.5f, 3.5f);
-    glVertex2f(0.25f, 4.0f);
-    glEnd();
-
-    // Nose
-    glColor3f(0.7f, 0.7f, 0.7f);
-    glBegin(GL_TRIANGLES);
-    glVertex2f(10.0f, 0.0f);
-    glVertex2f(12.0f, 1.0f);
-    glVertex2f(10.0f, 2.0f);
-    glEnd();
-
-    // Cockpit
-    glColor3f(0.1f, 0.1f, 0.1f);
-    glBegin(GL_POLYGON);
-    glVertex2f(9.2f, 1.0f);
-    glVertex2f(9.8f, 1.0f);
-    glVertex2f(9.8f, 1.6f);
-    glVertex2f(9.2f, 1.6f);
-    glEnd();
-
-    // Wings
-    glColor3f(0.0f, 0.4f, 0.8f);
-    glBegin(GL_QUADS);
-    glVertex2f(5.0f, 0.0f);
-    glVertex2f(4.0f, -3.0f);
-    glVertex2f(5.0f, -3.0f);
-    glVertex2f(7.0f, 0.0f);
-    glEnd();
-
-    glBegin(GL_QUADS);
-    glVertex2f(5.0f, 2.0f);
-    glVertex2f(3.0f, 4.0f);
-    glVertex2f(4.0f, 4.0f);
-    glVertex2f(6.0f, 2.0f);
-    glEnd();
-
-    // Windows
-    glColor3f(0.2f, 0.5f, 0.8f);
-    for (int i = 0; i < 6; i++) {
-        float xPos = 2.0f + i * 1.5f;
-        if (xPos < 8.5f) {
-            glBegin(GL_POLYGON);
-            glVertex2f(xPos + 0.1f, 0.6f);
-            glVertex2f(xPos + 0.7f, 0.6f);
-            glVertex2f(xPos + 0.7f, 1.4f);
-            glVertex2f(xPos + 0.1f, 1.4f);
-            glEnd();
-        }
-    }
-
-    glPopMatrix();
-}
-
-void updatePlane(int value) {
-    planeX += planeSpeed;
-    if (planeX > 120.0f) planeX = -30.0f;
-
-    planeX2 -= planeSpeed2;
-    if (planeX2 < -20.0f) planeX2 = 120.0f;
-
-    glutPostRedisplay();
-    glutTimerFunc(30, updatePlane, 0);
-}
-
-//----all road elements----
-
-//cars and bus global variable
-float carX1 = -30.0f;
-float carSpeed1 = 0.5f;
-
-float carX2 = 120.0f;
-float carSpeed2 = -0.4f;
-
-float carX3 = -40.0f;
-float carSpeed3 = 0.6f;
-
-float carX4 = 150.0f;
-float carSpeed4 = -0.5f;
-
 bool nightLight = false;
 
-void drawRedCar() {
-    glPushMatrix();
-    glTranslatef(carX1, 26.0f, 0.0f);
-    glScalef(1.5f, 1.5f, 1.0f);
+float cloudX1 = 10, cloudX2 = 50, cloudX3 = 80;
+float carX1 = -30.0f, carX2 = 130.0f, carX3 = -60.0f;
+float carSpeed1 = 0.3f, carSpeed2 = 0.25f, carSpeed3 = 0.2f;
 
-    //WHEELS
-    drawCircle(-1.8f, -1.7f, 0.8f, 100);
-    drawCircle(-3.8f, -1.7f, 0.8f, 100);
-    drawCircle(-8.5f, -1.7f, 0.8f, 100);
+void drawCircle(float cx, float cy, float r, int seg) {
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < seg; i++) {
+        float theta = 2.0f * 3.14159265f * i / seg;
+        glVertex2f(cx + r * cosf(theta), cy + r * sinf(theta));
+    }
+    glEnd();
+}
 
-    // HEADLIGHT (NIGHT ONLY)
-    if (nightLight) {
-        glBegin(GL_POLYGON);
-        glColor3ub(255, 255, 200);
-        glVertex3f(4.5f, 0.5f, 0.0f);
-        glVertex3f(4.5f, -2.5f, 0.0f);
-        glVertex3f(-0.5f, -1.3f, 0.0f);
-        glVertex3f(-0.5f, -1.0f, 0.0f);
+//  SKY
+
+void drawSky() {
+    if (!isNight) {
+        //  sky using two quads
+        glBegin(GL_QUADS);
+            glColor3ub(100, 180, 240);   // top
+            glVertex2f(0, 100); glVertex2f(100, 100);
+            glColor3ub(180, 225, 250);   // horizon
+            glVertex2f(100, 50); glVertex2f(0, 50);
+        glEnd();
+    } else {
+        // navy to dark blue
+        glBegin(GL_QUADS);
+            glColor3ub(5, 5, 30);
+            glVertex2f(0, 100); glVertex2f(100, 100);
+            glColor3ub(10, 10, 50);
+            glVertex2f(100, 50); glVertex2f(0, 50);
+        glEnd();
+        // Stars
+        glColor3ub(255, 255, 220);
+        glPointSize(2.0f);
+        glBegin(GL_POINTS);
+            glVertex2f(10, 95); glVertex2f(25, 90); glVertex2f(40, 96);
+            glVertex2f(55, 88); glVertex2f(70, 94); glVertex2f(85, 91);
+            glVertex2f(15, 82); glVertex2f(33, 85); glVertex2f(60, 80);
+            glVertex2f(78, 86); glVertex2f(90, 78); glVertex2f(5, 75);
+            glVertex2f(48, 92); glVertex2f(63, 97); glVertex2f(20, 98);
+        glEnd();
+    }
+}
+
+void drawSun() {
+    glColor3ub(255, 215, 0);
+    drawCircle(85, 88, 5, 100);
+    glColor4f(1.0f, 0.9f, 0.3f, 0.15f);
+    drawCircle(85, 88, 7, 100);
+}
+
+void drawMoon() {
+    glColor3ub(230, 230, 200);
+    drawCircle(85, 88, 4.5f, 60);
+    // Crescent cutout
+    glColor3ub(10, 10, 50);
+    drawCircle(87, 89, 3.8f, 60);
+}
+
+void drawCloud(float x, float y, float s) {
+    if (isNight) glColor3ub(50, 55, 75);
+    else         glColor3ub(255, 255, 255);
+    drawCircle(x,       y,       3.5*s, 40);
+    drawCircle(x+3.5*s, y+1.2*s, 4.0*s, 40);
+    drawCircle(x+7*s,   y,       3.5*s, 40);
+    drawCircle(x+3.5*s, y-0.8*s, 3.0*s, 40);
+}
+
+void drawHills() {
+    // mountains
+    glColor3ub(154, 176, 204);
+    glBegin(GL_POLYGON);
+        glVertex2f(-3,63); glVertex2f(12,45); glVertex2f(26,52); glVertex2f(32,63);
+    glEnd();
+    glBegin(GL_POLYGON);
+        glVertex2f(18,63); glVertex2f(34,41); glVertex2f(50,50); glVertex2f(59,63);
+    glEnd();
+    glBegin(GL_POLYGON);
+        glVertex2f(47,63); glVertex2f(63,43); glVertex2f(79,52); glVertex2f(88,63);
+    glEnd();
+    glBegin(GL_POLYGON);
+        glVertex2f(76,63); glVertex2f(91,44); glVertex2f(103,52); glVertex2f(106,63);
+    glEnd();
+
+    // --- MID mountains
+    glColor3ub(110, 140, 170);
+    glBegin(GL_POLYGON);
+        glVertex2f(-1,65); glVertex2f(12,51); glVertex2f(28,58); glVertex2f(41,65);
+    glEnd();
+    glBegin(GL_POLYGON);
+        glVertex2f(23,65); glVertex2f(42,46); glVertex2f(60,56); glVertex2f(73,65);
+    glEnd();
+    glBegin(GL_POLYGON);
+        glVertex2f(59,65); glVertex2f(75,49); glVertex2f(91,58); glVertex2f(103,65);
+    glEnd();
+
+    // --- Snow caps on mid mountains ---
+    glColor3ub(240, 245, 255);
+    glBegin(GL_POLYGON);
+        glVertex2f(38,51); glVertex2f(42,46); glVertex2f(46,51);
+    glEnd();
+    glBegin(GL_POLYGON);
+        glVertex2f(71,54); glVertex2f(75,49); glVertex2f(79,54);
+    glEnd();
+
+    // Treeline at mountain base
+    glColor3ub(45, 75, 45);
+    glBegin(GL_QUADS);
+        glVertex2f(0,65);
+        glVertex2f(100,65);
+        glVertex2f(100,67);
+        glVertex2f(0,67);
+    glEnd();
+
+    // FRONT HILLS
+    // Hill 1
+    glBegin(GL_POLYGON);
+        glColor3ub(58, 170, 58);
+        glVertex2f(-3,67); glVertex2f(10,55);
+        glColor3ub(30, 122, 30);
+        glVertex2f(20,60); glVertex2f(29,67);
+    glEnd();
+    // Hill 2
+    glBegin(GL_POLYGON);
+        glColor3ub(58, 170, 58);
+        glVertex2f(12,67); glVertex2f(24,53);
+        glColor3ub(30, 122, 30);
+        glVertex2f(38,59); glVertex2f(55,67);
+    glEnd();
+    // Hill 3
+    glBegin(GL_POLYGON);
+        glColor3ub(58, 170, 58);
+        glVertex2f(38,67);
+        glVertex2f(50,50);
+        glColor3ub(30, 122, 30);
+        glVertex2f(64,58);
+        glVertex2f(80,67);
+    glEnd();
+    // Hill 4
+    glBegin(GL_POLYGON);
+        glColor3ub(58, 170, 58);
+        glVertex2f(67,67);
+        glVertex2f(79,52);
+        glColor3ub(30, 122, 30);
+        glVertex2f(92,59);
+        glVertex2f(103,67);
+    glEnd();
+
+    glColor3ub(34, 110, 34);
+    glBegin(GL_QUADS);
+        glVertex2f(0,50); glVertex2f(100,50); glVertex2f(100,67); glVertex2f(0,67);
+    glEnd();
+}
+
+//  RIVER
+
+void drawRiver() {
+    // River body
+    if (!isNight) glColor3ub(70, 160, 210);
+    else          glColor3ub(20, 50, 100);
+    glBegin(GL_QUADS);
+        glVertex2f(0,  44); glVertex2f(100, 44);
+        glVertex2f(100, 50); glVertex2f(0,  50);
+    glEnd();
+
+    // Shimmer lines
+    if (!isNight) glColor3ub(180, 220, 245);
+    else          glColor3ub(40,  80, 130);
+    glLineWidth(1.0f);
+    for (int i = 5; i < 100; i += 12) {
+        glBegin(GL_LINES);
+            glVertex2f(i,     47.5f);
+            glVertex2f(i + 5, 47.5f);
+        glEnd();
+        glBegin(GL_LINES);
+            glVertex2f(i + 2, 46.0f);
+            glVertex2f(i + 6, 46.0f);
         glEnd();
     }
 
-    // --- CAR BODY (RED PARTS) ---
-    glBegin(GL_POLYGON);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(-9.2f, -1.95f, 0.0f);
-    glVertex3f(-0.5f, -1.95f, 0.0f);
-    glVertex3f(-0.5f, -0.8f, 0.0f);
-    glVertex3f(-9.2f, -0.8f, 0.0f);
+    // River banks
+    glColor3ub(180, 155, 100);
+    glBegin(GL_QUADS);
+        glVertex2f(0, 43.2f); glVertex2f(100, 43.2f);
+        glVertex2f(100, 44.0f); glVertex2f(0, 44.0f);
+    glEnd();
+    glBegin(GL_QUADS);
+        glVertex2f(0, 50.0f); glVertex2f(100, 50.0f);
+        glVertex2f(100, 50.8f); glVertex2f(0, 50.8f);
+    glEnd();
+}
+
+//  GROUND / GRASS BETWEEN RIVER AND ROAD
+void drawGrass() {
+    glColor3ub(60, 140, 60);
+    glBegin(GL_QUADS);
+        glVertex2f(0, 33); glVertex2f(100, 33);
+        glVertex2f(100, 43.2f); glVertex2f(0, 43.2f);
+    glEnd();
+}
+
+
+//  ROAD + FOOTPATH
+void drawRoadAndFootpath() {
+    glColor3ub(190, 185, 175);   // top footpath
+    glBegin(GL_QUADS);
+        glVertex2f(0, 30); glVertex2f(100, 30);
+        glVertex2f(100, 33); glVertex2f(0, 33);
     glEnd();
 
-    glBegin(GL_POLYGON);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(-3.1f, 0.5f, 0.0f);
-    glVertex3f(-9.2f, 0.5f, 0.0f);
-    glVertex3f(-9.2f, 1.69f, 0.0f);
-    glVertex3f(-3.1f, 1.69f, 0.0f);
+    glColor3ub(190, 185, 175);   // bottom footpath
+    glBegin(GL_QUADS);
+        glVertex2f(0, 5); glVertex2f(100, 5);
+        glVertex2f(100, 8); glVertex2f(0, 8);
     glEnd();
 
-    // Pillars
-    glBegin(GL_POLYGON);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(-6.05f, 0.5f, 0.0f);
-    glVertex3f(-6.05f, -0.85f, 0.0f);
-    glVertex3f(-6.0f, -0.85f, 0.0f);
-    glVertex3f(-6.0f, 0.5f, 0.0f);
+    // Footpath tiles
+    glColor3ub(160, 155, 145);
+    for (int i = 0; i < 100; i += 8) {
+        glBegin(GL_LINES);
+            glVertex2f(i, 30); glVertex2f(i, 33);
+        glEnd();
+    }
+    // Footpath tiles
+    for (int i = 0; i < 100; i += 8) {
+        glBegin(GL_LINES);
+            glVertex2f(i, 5); glVertex2f(i, 8);
+        glEnd();
+    }
+
+    // Kerb lines
+    glColor3ub(220, 215, 200);
+    glLineWidth(1.5f);
+    glBegin(GL_LINES);
+        glVertex2f(0, 30); glVertex2f(100, 30);
+    glEnd();
+    glBegin(GL_LINES);
+        glVertex2f(0,  8); glVertex2f(100,  8);
     glEnd();
 
-    glBegin(GL_POLYGON);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(-3.1f, 0.5f, 0.0f);
-    glVertex3f(-3.15f, 0.5f, 0.0f);
-    glVertex3f(-3.15f, -1.95f, 0.0f);
-    glVertex3f(-3.1f, -1.95f, 0.0f);
+    //rOAD SURFACE
+    glColor3ub(45, 45, 45);
+    glBegin(GL_QUADS);
+        glVertex2f(0,  8); glVertex2f(100,  8);
+        glVertex2f(100, 30); glVertex2f(0, 30);
     glEnd();
 
-    glBegin(GL_POLYGON);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(-9.2f, 0.5f, 0.0f);
-    glVertex3f(-9.15f, 0.5f, 0.0f);
-    glVertex3f(-9.15f, -1.95f, 0.0f);
-    glVertex3f(-9.2f, -1.95f, 0.0f);
+    // Road edge lines yellow
+    glColor3ub(255, 200, 0);
+    glLineWidth(1.5f);
+    glBegin(GL_LINES);
+        glVertex2f(0, 9.5f); glVertex2f(100, 9.5f);
+    glEnd();
+    glBegin(GL_LINES);
+        glVertex2f(0, 28.5f); glVertex2f(100, 28.5f);
+    glEnd();
+
+    // Center dashed white line
+    glColor3ub(255, 255, 255);
+    glLineWidth(1.5f);
+    for (int i = 0; i < 100; i += 10) {
+        glBegin(GL_LINES);
+            glVertex2f(i,     19);
+            glVertex2f(i + 6, 19);
+        glEnd();
+    }
+
+    // Lane divider dashes
+    glColor3ub(200, 200, 200);
+    for (int i = 2; i < 100; i += 10) {
+        glBegin(GL_LINES);
+            glVertex2f(i,     24.5f);
+            glVertex2f(i + 5, 24.5f);
+        glEnd();
+    }
+    // Lane divider dashes
+    for (int i = 2; i < 100; i += 10) {
+        glBegin(GL_LINES);
+            glVertex2f(i,     13.5f);
+            glVertex2f(i + 5, 13.5f);
+        glEnd();
+    }
+
+    //lamp posts on footpath
+    glColor3ub(80, 80, 80);
+    int lampX[] = {15, 40, 65, 90};
+    for (int i = 0; i < 4; i++) {
+        // Post
+        glLineWidth(2.0f);
+        glBegin(GL_LINES);
+            glVertex2f(lampX[i], 30);
+            glVertex2f(lampX[i], 36);
+        glEnd();
+        // Arm
+        glBegin(GL_LINES);
+            glVertex2f(lampX[i],     36);
+            glVertex2f(lampX[i] + 2, 36);
+        glEnd();
+        // Lamp head
+        if (!isNight) glColor3ub(100, 100, 100);
+        else          glColor3ub(255, 240, 150);
+        drawCircle(lampX[i] + 2, 36, 0.8f, 20);
+
+        // Night
+        if (nightLight) {
+            glColor4f(1.0f, 0.95f, 0.5f, 0.12f);
+            drawCircle(lampX[i] + 2, 36, 4.0f, 30);
+        }
+        glColor3ub(80, 80, 80);
+    }
+}
+
+void drawCar(float x, float y, float r, float g, float b, bool facingRight) {
+    glPushMatrix();
+    glTranslatef(x, y, 0.0f);
+
+    // night only
+    if (nightLight) {
+        glColor4f(1.0f, 1.0f, 0.6f, 0.2f);
+        if (facingRight) {
+            glBegin(GL_TRIANGLES);
+                glVertex2f(5.5f, 1.0f); glVertex2f(18, -1); glVertex2f(18, 3);
+            glEnd();
+        } else {
+            glBegin(GL_TRIANGLES);
+                glVertex2f(-5.5f, 1.0f); glVertex2f(-18, -1); glVertex2f(-18, 3);
+            glEnd();
+        }
+    }
+
+    // Car body
+    glColor3f(r, g, b);
+    glBegin(GL_QUADS);
+        glVertex2f(-5, 0); glVertex2f(5, 0);
+        glVertex2f(5, 2.5f); glVertex2f(-5, 2.5f);
+    glEnd();
+
+    // Roof
+    glColor3f(r * 0.75f, g * 0.75f, b * 0.75f);
+    glBegin(GL_QUADS);
+        glVertex2f(-2.5f, 2.5f); glVertex2f(2.5f, 2.5f);
+        glVertex2f(2.0f,  4.2f); glVertex2f(-2.0f, 4.2f);
     glEnd();
 
     // Windows
-    glBegin(GL_TRIANGLES);
-    glColor3f(0.6f, 0.8f, 1.0f);
-    glVertex3f(-3.1f, 0.9f, 0.0f);
-    glVertex3f(-3.1f, -0.85f, 0.0f);
-    glVertex3f(-0.5f, -0.85f, 0.0f);
+    glColor3ub(180, 220, 240);
+    glBegin(GL_QUADS);
+        glVertex2f(-2.3f, 2.7f); glVertex2f(-0.2f, 2.7f);
+        glVertex2f(-0.2f, 4.0f); glVertex2f(-2.3f, 4.0f);
+    glEnd();
+    glBegin(GL_QUADS);
+        glVertex2f(0.2f, 2.7f); glVertex2f(2.3f, 2.7f);
+        glVertex2f(2.3f, 4.0f); glVertex2f(0.2f, 4.0f);
     glEnd();
 
-    glBegin(GL_POLYGON);
-    glColor3f(0.6f, 0.8f, 1.0f);
-    glVertex3f(-6.0f, 0.5f, 0.0f);
-    glVertex3f(-3.15f, 0.5f, 0.0f);
-    glVertex3f(-3.15f, -0.85f, 0.0f);
-    glVertex3f(-6.0f, -0.85f, 0.0f);
-    glEnd();
+    // Wheels
+    glColor3ub(30, 30, 30);
+    drawCircle(-3.0f, 0, 1.0f, 20);
+    drawCircle( 3.0f, 0, 1.0f, 20);
+    // Hubcaps
+    glColor3ub(180, 180, 180);
+    drawCircle(-3.0f, 0, 0.4f, 20);
+    drawCircle( 3.0f, 0, 0.4f, 20);
 
-    glBegin(GL_POLYGON);
-    glColor3f(0.6f, 0.8f, 1.0f);
-    glVertex3f(-6.05f, 0.5f, 0.0f);
-    glVertex3f(-9.15f, 0.5f, 0.0f);
-    glVertex3f(-9.15f, -0.85f, 0.0f);
-    glVertex3f(-6.05f, -0.85f, 0.0f);
-    glEnd();
-
-    glPopMatrix();
-}
-
-void drawMiniCar() {
-    glPushMatrix();
-    glTranslatef(carX4, 40.0f, 0.0f);
-    glScalef(-7.5f, 7.5f, 1.0f);
-
-    float wheelY = -0.52f;
-    float wheelRadius = 0.1f;
-    drawCircle(0.1f, wheelY, wheelRadius, 100);
-    drawCircle(-0.4f, wheelY, wheelRadius, 100);
-
-    if (nightLight) {
-        glBegin(GL_POLYGON);
-        glColor3ub(192, 192, 192);
-        glVertex2f(0.3f, -0.45f);
-        glVertex2f(0.8f, -0.6f);
-        glVertex2f(0.8f, -0.1f);
-        glVertex2f(0.3f, -0.3f);
-        glEnd();
+    // Headlights
+    if (facingRight) {
+        glColor3ub(255, 255, 150);
+        drawCircle(5.0f, 1.2f, 0.5f, 15);
+        glColor3ub(255, 80, 80);
+        drawCircle(-5.0f, 1.2f, 0.5f, 15);
+    } else {
+        glColor3ub(255, 80, 80);
+        drawCircle(5.0f, 1.2f, 0.5f, 15);
+        glColor3ub(255, 255, 150);
+        drawCircle(-5.0f, 1.2f, 0.5f, 15);
     }
 
-    glBegin(GL_QUADS);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex2f(0.3f, -0.2f);
-    glVertex2f(0.3f, -0.5f);
-    glVertex2f(-0.6f, -0.5f);
-    glVertex2f(-0.6f, -0.2f);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-    glColor3f(0.0f, 0.0f, 0.0f);
-    glVertex2f(0.0f, 0.02f);
-    glVertex2f(-0.35f, 0.02f);
-    glVertex2f(-0.35f, -0.2f);
-    glVertex2f(0.0f, -0.2f);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-    glColor3f(0.0f, 0.0f, 0.0f);
-    glVertex2f(0.15f, -0.2f);
-    glVertex2f(0.0f, 0.02f);
-    glVertex2f(-0.35f, 0.02f);
-    glVertex2f(-0.45f, -0.2f);
-    glEnd();
-
-    glBegin(GL_QUADS);
-    glColor3f(0.6f, 0.8f, 1.0f);
-    glVertex2f(0.15f, -0.2f);
-    glVertex2f(0.0f, 0.02f);
-    glVertex2f(-0.35f, 0.02f);
-    glVertex2f(-0.45f, -0.2f);
-    glEnd();
-
     glPopMatrix();
 }
 
-void drawBlueBus() {
-    glPushMatrix();
-    glTranslatef(carX3, 33.0f, 0.0f);
-    glScalef(1.5f, 1.5f, 1.0f);
+void update(int v) {
+    cloudX1 += 0.08f; if (cloudX1 > 115) cloudX1 = -25;
+    cloudX2 += 0.05f; if (cloudX2 > 115) cloudX2 = -25;
+    cloudX3 += 0.06f; if (cloudX3 > 115) cloudX3 = -25;
 
-    float wheelY = -2.0f;
-    float wheelRadius = 0.8f;
-
-    drawCircle(2.0f, wheelY, wheelRadius, 100);
-    drawCircle(5.0f, wheelY, wheelRadius, 100);
-    drawCircle(7.0f, wheelY, wheelRadius, 100);
-    drawCircle(10.0f, wheelY, wheelRadius, 100);
-
-    glColor3f(0.0f, 0.0f, 0.8f);
-    glBegin(GL_POLYGON);
-    glVertex3f(0.0f, -2.0f, 0.0f);
-    glVertex3f(12.0f, -2.0f, 0.0f);
-    glVertex3f(12.0f, 0.5f, 0.0f);
-    glVertex3f(0.0f, 0.5f, 0.0f);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3f(0.0f, 0.5f, 0.0f);
-    glVertex3f(12.0f, 0.5f, 0.0f);
-    glVertex3f(12.0f, 3.0f, 0.0f);
-    glVertex3f(0.0f, 3.0f, 0.0f);
-    glEnd();
-
-    if (nightLight) {
-        glBegin(GL_POLYGON);
-        glColor3ub(255, 255, 200);
-        glVertex3f(12.5f, -0.5f, 0.0f);
-        glVertex3f(12.5f, -1.5f, 0.0f);
-        glVertex3f(15.0f, -2.5f, 0.0f);
-        glVertex3f(15.0f, 0.5f, 0.0f);
-        glEnd();
-    }
-
-    glColor3f(0.7f, 0.9f, 1.0f);
-    glBegin(GL_POLYGON);
-    glVertex3f(11.0f, 2.5f, 0.0f);
-    glVertex3f(12.0f, 2.5f, 0.0f);
-    glVertex3f(12.0f, 0.5f, 0.0f);
-    glVertex3f(11.0f, 0.5f, 0.0f);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3f(9.5f, 2.5f, 0.0f);
-    glVertex3f(11.0f, 2.5f, 0.0f);
-    glVertex3f(11.0f, 0.5f, 0.0f);
-    glVertex3f(9.5f, 0.5f, 0.0f);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3f(7.5f, 2.5f, 0.0f);
-    glVertex3f(9.0f, 2.5f, 0.0f);
-    glVertex3f(9.0f, 0.5f, 0.0f);
-    glVertex3f(7.5f, 0.5f, 0.0f);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3f(5.5f, 2.5f, 0.0f);
-    glVertex3f(7.0f, 2.5f, 0.0f);
-    glVertex3f(7.0f, 0.5f, 0.0f);
-    glVertex3f(5.5f, 0.5f, 0.0f);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3f(3.5f, 2.5f, 0.0f);
-    glVertex3f(5.0f, 2.5f, 0.0f);
-    glVertex3f(5.0f, 0.5f, 0.0f);
-    glVertex3f(3.5f, 0.5f, 0.0f);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3f(1.5f, 2.5f, 0.0f);
-    glVertex3f(3.0f, 2.5f, 0.0f);
-    glVertex3f(3.0f, 0.5f, 0.0f);
-    glVertex3f(1.5f, 0.5f, 0.0f);
-    glEnd();
-
-    glPopMatrix();
-}
-
-void updateCars(int value) {
-    carX1 += carSpeed1;
-    if (carX1 > 120.0f) carX1 = -30.0f;
-
-    carX2 += carSpeed2;
-    if (carX2 < -30.0f) carX2 = 120.0f;
-
-    carX3 += carSpeed3;
-    if (carX3 > 160.0f) carX3 = -40.0f;
-
-    carX4 += carSpeed4;
-    if (carX4 < -50.0f) carX4 = 150.0f;
+    carX1 += carSpeed1;  if (carX1  >  115) carX1  = -20;
+    carX2 -= carSpeed2;  if (carX2  < -15)  carX2  = 115;
+    carX3 += carSpeed3;  if (carX3  >  115) carX3  = -30;
 
     glutPostRedisplay();
-    glutTimerFunc(30, updateCars, 0);
+    glutTimerFunc(16, update, 0);
 }
 
-// Building drawing functions
-void drawBuildingTop(float x, float y, float width, float height, float r, float g, float b) {
-    glColor3f(r, g, b);
-    glBegin(GL_QUADS);
-    glVertex2f(x, y);
-    glVertex2f(x + width, y);
-    glVertex2f(x + width, y + height);
-    glVertex2f(x, y + height);
-    glEnd();
-}
-
-void deawSideBuildingTop(float x, float y, float width, float height, float r, float g, float b) {
-    glColor3f(r, g, b);
-    glBegin(GL_QUADS);
-    glVertex2f(x, y);
-    glVertex2f(x + width, y);
-    glVertex2f(x + width, y + height);
-    glVertex2f(x, y + height);
-    glEnd();
-}
-
-void drawWindow(float x1, float y1, float x2, float y2, float r, float g, float b) {
-    glColor3f(r, g, b);
-    glBegin(GL_QUADS);
-    glVertex2f(x1, y1);
-    glVertex2f(x2, y1);
-    glVertex2f(x2, y2);
-    glVertex2f(x1, y2);
-    glEnd();
-}
-
-void drawSideWindow(float x1, float y1, float x2, float y2, float r, float g, float b) {
-    glColor3f(r, g, b);
-    glBegin(GL_QUADS);
-    glVertex2f(x1, y1);
-    glVertex2f(x2, y1);
-    glVertex2f(x2, y2);
-    glVertex2f(x1, y2);
-    glEnd();
-}
-
-void drawBuildingDoor(float x1, float y1, float x2, float y2, float r, float g, float b) {
-    glColor3f(r, g, b);
-    glBegin(GL_QUADS);
-    glVertex2f(x1, y1);
-    glVertex2f(x2, y1);
-    glVertex2f(x2, y2);
-    glVertex2f(x1, y2);
-    glEnd();
+void handleKey(unsigned char key, int x, int y) {
+    if (key == 'n' || key == 'N') { isNight = true;  nightLight = true;  }
+    if (key == 'd' || key == 'D') { isNight = false; nightLight = false; }
+    glutPostRedisplay();
 }
 
 
-// Draw day scene
-void drawDayScene() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-
-    drawRoads();
-    roadBorder();
-
-    drawSky(0.53f, 0.81f, 0.92f);
-    drawSun(70,75, 2);
-
-    //call clouds
-    drawCloud(cloudX1, 75.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    drawCloud(cloudX2, 70.0f, 1.2f, 0.95f, 0.95f, 0.95f);
-    drawCloud(cloudX3, 78.0f, 0.8f, 0.9f, 0.9f, 0.9f);
-
-    //call planes
-    drawPlane();
-    drawPlane2(70.0f);
-
-
-    //call cars and bus
-    drawMiniCar();
-    drawBlueBus();
-    drawRedCar();
-
-
-
-    glutSwapBuffers();
-}
-
-// Draw night scene
-void drawNightScene() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-
-    drawRoads();
-    roadBorder();
-    drawSky(0.08f, 0.08f, 0.25f);
-    drawStars();
-    drawCrescentMoon(10, 77, 2);
-
-    //clouds
-    drawCloud(cloudX1, 75.0f, 1.0f, 0.3f, 0.3f, 0.4f);
-    drawCloud(cloudX2, 70.0f, 1.2f, 0.35f, 0.35f, 0.45f);
-    drawCloud(cloudX3, 78.0f, 0.9f, 0.25f, 0.25f, 0.35f);
-
-    //call planes
-    drawPlane();
-    drawPlane2(70.0f);
-
-    //call cars and bus
-    drawMiniCar();
-    drawBlueBus();
-    drawRedCar();
-
-    glutSwapBuffers();
-}
-
-// Display callback
 void display() {
-    if (!isNight) {
-        drawDayScene();
-    }
-    else {
-        drawNightScene();
-    }
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
+
+    drawSky();
+    if (!isNight)
+        drawSun();
+    else
+        drawMoon();
+
+    drawCloud(cloudX1, 88, 0.7f);
+    drawCloud(cloudX2, 82, 0.6f);
+    drawCloud(cloudX3, 92, 0.5f);
+
+    drawHills();
+    drawRiver();
+    drawGrass();
+    drawRoadAndFootpath();
+
+
+    drawCar(carX1,       12.5f, 0.8f, 0.0f, 0.0f, true);   // red, lower right lane
+    drawCar(carX3 + 20,  22.0f, 0.0f, 0.5f, 0.9f, true);   // blue, upper right lane
+    drawCar(carX2,       25.5f, 0.2f, 0.7f, 0.2f, false);  // green, oncoming
+
+    glutSwapBuffers();
 }
 
-// Keyboard handler to toggle day/night
-void handleKeypress(unsigned char key, int x, int y) {
-    if (key == 'n' || key == 'N') {
-        isNight = true;
-        nightLight = true;
-        glutPostRedisplay();
-    }
-    if (key == 'd' || key == 'D') {
-        isNight = false;
-        nightLight = false;
-        glutPostRedisplay();
-    }
-    if (key == '2') {
-        // click 2 to - increase speed
-        planeSpeed = planeSpeed * 2;
-        planeSpeed2 = planeSpeed2 * 2;
-        carSpeed1 = 0.5 * 5;
-        carSpeed2 = -0.4f * 2;
-        carSpeed3 = 0.6f * 3;
-        carSpeed4 = -0.5f * 4;
-    }
-    if (key == '3') {
-        // click 3 to  - decrease speed
-        planeSpeed = planeSpeed / 2;
-        planeSpeed2 = planeSpeed2 / 2;
-        carSpeed1 = 0.5 / 5;
-        carSpeed2 = -0.4f / 2;
-        carSpeed3 = 0.6f / 3;
-        carSpeed4 = -0.5f / 4;
-    }
-
-    if (key == '4') {
-        //Click 3 - reset to normal speed
-        planeSpeed = 0.2f * 2;
-        planeSpeed2 = 0.4;
-        carSpeed1 = 0.5;
-        carSpeed2 = -0.4f;
-        carSpeed3 = 0.6f;
-        carSpeed4 = -0.5f;
-
-    }
-}
-
-// Mouse handler
-void handleMouse(int button, int state, int x, int y) {
-    if (state == GLUT_DOWN) {
-        if (button == GLUT_LEFT_BUTTON) {
-            // Left click - increase speed
-            planeSpeed = planeSpeed * 2;
-            planeSpeed2 = planeSpeed2 * 2;
-            carSpeed1 = 0.5 * 5;
-            carSpeed2 = -0.4f * 2;
-            carSpeed3 = 0.6f * 3;
-            carSpeed4 = -0.5f * 4;
-        }
-        else if (button == GLUT_RIGHT_BUTTON) {
-            // Right click - decrease speed
-            planeSpeed = planeSpeed / 2;
-            planeSpeed2 = planeSpeed2 / 2;
-            carSpeed1 = 0.5 / 5;
-            carSpeed2 = -0.4f / 2;
-            carSpeed3 = 0.6f / 3;
-            carSpeed4 = -0.5f / 4;
-        }
-        else if (button == GLUT_MIDDLE_BUTTON) {
-            // Middle click - reset to normal speed
-            planeSpeed = 0.2f * 2;
-            planeSpeed2 = 0.4;
-            carSpeed1 = 0.5;
-            carSpeed2 = -0.4f;
-            carSpeed3 = 0.6f;
-            carSpeed4 = -0.5f;
-        }
-    }
-    glutPostRedisplay();
-}
-
-// Initialization
-void initRendering() {
-    glClearColor(0.5, 0.5, 0.5, 0.5);
+void init() {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, 100, 0, 100);
+    glMatrixMode(GL_MODELVIEW);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-// Resize handler
-void handleResize(int w, int h) {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0.0, 100.0, 0.0, 80.0);
-    glMatrixMode(GL_MODELVIEW);
-}
-
-// Main function
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(1280, 720);
-    glutCreateWindow("City View 2D - Day/Night Scene");
-
-    initRendering();
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(900, 600);
+    glutCreateWindow("Scenic Landscape ");
+    init();
     glutDisplayFunc(display);
-    glutKeyboardFunc(handleKeypress);
-    glutMouseFunc(handleMouse);
-    glutReshapeFunc(handleResize);
-
-    glutTimerFunc(0, updateClouds, 0);
-    glutTimerFunc(0, updateCars, 0);
-    glutTimerFunc(0, updatePlane, 0);
-
+    glutKeyboardFunc(handleKey);
+    glutTimerFunc(16, update, 0);
     glutMainLoop();
     return 0;
 }
