@@ -66,8 +66,11 @@ void drawMoon() {
 }
 
 void drawCloud(float x, float y, float s) {
-    if (isNight) glColor3ub(50, 55, 75);
-    else         glColor3ub(255, 255, 255);
+    if (isNight)
+        glColor3ub(50, 55, 75);
+    else
+        glColor3ub(255, 255, 255);
+
     drawCircle(x,       y,       3.5*s, 40);
     drawCircle(x+3.5*s, y+1.2*s, 4.0*s, 40);
     drawCircle(x+7*s,   y,       3.5*s, 40);
@@ -78,37 +81,68 @@ void drawHills() {
     // mountains
     glColor3ub(154, 176, 204);
     glBegin(GL_POLYGON);
-        glVertex2f(-3,63); glVertex2f(12,45); glVertex2f(26,52); glVertex2f(32,63);
+        glVertex2f(-3,63);
+        glVertex2f(12,45);
+        glVertex2f(26,52);
+        glVertex2f(32,63);
     glEnd();
+
     glBegin(GL_POLYGON);
-        glVertex2f(18,63); glVertex2f(34,41); glVertex2f(50,50); glVertex2f(59,63);
+        glVertex2f(18,63);
+        glVertex2f(34,41);
+        glVertex2f(50,50);
+        glVertex2f(59,63);
     glEnd();
+
     glBegin(GL_POLYGON);
-        glVertex2f(47,63); glVertex2f(63,43); glVertex2f(79,52); glVertex2f(88,63);
+        glVertex2f(47,63);
+        glVertex2f(63,43);
+        glVertex2f(79,52);
+        glVertex2f(88,63);
     glEnd();
+
     glBegin(GL_POLYGON);
-        glVertex2f(76,63); glVertex2f(91,44); glVertex2f(103,52); glVertex2f(106,63);
+        glVertex2f(76,63);
+        glVertex2f(91,44);
+        glVertex2f(103,52);
+        glVertex2f(106,63);
     glEnd();
 
     // --- MID mountains
     glColor3ub(110, 140, 170);
     glBegin(GL_POLYGON);
-        glVertex2f(-1,65); glVertex2f(12,51); glVertex2f(28,58); glVertex2f(41,65);
+        glVertex2f(-1,65);
+        glVertex2f(12,51);
+        glVertex2f(28,58);
+        glVertex2f(41,65);
     glEnd();
+
     glBegin(GL_POLYGON);
-        glVertex2f(23,65); glVertex2f(42,46); glVertex2f(60,56); glVertex2f(73,65);
+        glVertex2f(23,65);
+        glVertex2f(42,46);
+        glVertex2f(60,56);
+        glVertex2f(73,65);
     glEnd();
+
     glBegin(GL_POLYGON);
-        glVertex2f(59,65); glVertex2f(75,49); glVertex2f(91,58); glVertex2f(103,65);
+        glVertex2f(59,65);
+        glVertex2f(75,49);
+        glVertex2f(91,58);
+        glVertex2f(103,65);
     glEnd();
 
     // --- Snow caps on mid mountains ---
     glColor3ub(240, 245, 255);
     glBegin(GL_POLYGON);
-        glVertex2f(38,51); glVertex2f(42,46); glVertex2f(46,51);
+        glVertex2f(38,51);
+        glVertex2f(42,46);
+        glVertex2f(46,51);
     glEnd();
+
     glBegin(GL_POLYGON);
-        glVertex2f(71,54); glVertex2f(75,49); glVertex2f(79,54);
+        glVertex2f(71,54);
+        glVertex2f(75,49);
+        glVertex2f(79,54);
     glEnd();
 
     // Treeline at mountain base
@@ -124,16 +158,20 @@ void drawHills() {
     // Hill 1
     glBegin(GL_POLYGON);
         glColor3ub(58, 170, 58);
-        glVertex2f(-3,67); glVertex2f(10,55);
+        glVertex2f(-3,67);
+        glVertex2f(10,55);
         glColor3ub(30, 122, 30);
-        glVertex2f(20,60); glVertex2f(29,67);
+        glVertex2f(20,60);
+        glVertex2f(29,67);
     glEnd();
     // Hill 2
     glBegin(GL_POLYGON);
         glColor3ub(58, 170, 58);
-        glVertex2f(12,67); glVertex2f(24,53);
+        glVertex2f(12,67);
+        glVertex2f(24,53);
         glColor3ub(30, 122, 30);
-        glVertex2f(38,59); glVertex2f(55,67);
+        glVertex2f(38,59);
+        glVertex2f(55,67);
     glEnd();
     // Hill 3
     glBegin(GL_POLYGON);
@@ -156,7 +194,10 @@ void drawHills() {
 
     glColor3ub(34, 110, 34);
     glBegin(GL_QUADS);
-        glVertex2f(0,50); glVertex2f(100,50); glVertex2f(100,67); glVertex2f(0,67);
+        glVertex2f(0,50);
+        glVertex2f(100,50);
+        glVertex2f(100,67);
+        glVertex2f(0,67);
     glEnd();
 }
 
@@ -164,17 +205,25 @@ void drawHills() {
 
 void drawRiver() {
     // River body
-    if (!isNight) glColor3ub(70, 160, 210);
-    else          glColor3ub(20, 50, 100);
+    if (!isNight)
+        glColor3ub(70, 160, 210);
+    else
+        glColor3ub(20, 50, 100);
+
     glBegin(GL_QUADS);
-        glVertex2f(0,  44); glVertex2f(100, 44);
-        glVertex2f(100, 50); glVertex2f(0,  50);
+        glVertex2f(0,  44);
+        glVertex2f(100, 44);
+        glVertex2f(100, 50);
+        glVertex2f(0,  50);
     glEnd();
 
     // Shimmer lines
-    if (!isNight) glColor3ub(180, 220, 245);
-    else          glColor3ub(40,  80, 130);
+    if (!isNight)
+        glColor3ub(180, 220, 245);
+    else
+        glColor3ub(40,  80, 130);
     glLineWidth(1.0f);
+
     for (int i = 5; i < 100; i += 12) {
         glBegin(GL_LINES);
             glVertex2f(i,     47.5f);
@@ -189,12 +238,16 @@ void drawRiver() {
     // River banks
     glColor3ub(180, 155, 100);
     glBegin(GL_QUADS);
-        glVertex2f(0, 43.2f); glVertex2f(100, 43.2f);
-        glVertex2f(100, 44.0f); glVertex2f(0, 44.0f);
+        glVertex2f(0, 43.2f);
+        glVertex2f(100, 43.2f);
+        glVertex2f(100, 44.0f);
+        glVertex2f(0, 44.0f);
     glEnd();
     glBegin(GL_QUADS);
-        glVertex2f(0, 50.0f); glVertex2f(100, 50.0f);
-        glVertex2f(100, 50.8f); glVertex2f(0, 50.8f);
+        glVertex2f(0, 50.0f);
+        glVertex2f(100, 50.0f);
+        glVertex2f(100, 50.8f);
+        glVertex2f(0, 50.8f);
     glEnd();
 }
 
@@ -202,8 +255,10 @@ void drawRiver() {
 void drawGrass() {
     glColor3ub(60, 140, 60);
     glBegin(GL_QUADS);
-        glVertex2f(0, 33); glVertex2f(100, 33);
-        glVertex2f(100, 43.2f); glVertex2f(0, 43.2f);
+        glVertex2f(0, 33);
+        glVertex2f(100, 33);
+        glVertex2f(100, 43.2f);
+        glVertex2f(0, 43.2f);
     glEnd();
 }
 
@@ -212,14 +267,18 @@ void drawGrass() {
 void drawRoadAndFootpath() {
     glColor3ub(190, 185, 175);   // top footpath
     glBegin(GL_QUADS);
-        glVertex2f(0, 30); glVertex2f(100, 30);
-        glVertex2f(100, 33); glVertex2f(0, 33);
+        glVertex2f(0, 30);
+        glVertex2f(100, 30);
+        glVertex2f(100, 33);
+        glVertex2f(0, 33);
     glEnd();
 
     glColor3ub(190, 185, 175);   // bottom footpath
     glBegin(GL_QUADS);
-        glVertex2f(0, 5); glVertex2f(100, 5);
-        glVertex2f(100, 8); glVertex2f(0, 8);
+        glVertex2f(0, 5);
+        glVertex2f(100, 5);
+        glVertex2f(100, 8);
+        glVertex2f(0, 8);
     glEnd();
 
     // Footpath tiles
@@ -240,17 +299,21 @@ void drawRoadAndFootpath() {
     glColor3ub(220, 215, 200);
     glLineWidth(1.5f);
     glBegin(GL_LINES);
-        glVertex2f(0, 30); glVertex2f(100, 30);
+        glVertex2f(0, 30);
+        glVertex2f(100, 30);
     glEnd();
     glBegin(GL_LINES);
-        glVertex2f(0,  8); glVertex2f(100,  8);
+        glVertex2f(0,  8);
+        glVertex2f(100,  8);
     glEnd();
 
     //rOAD SURFACE
     glColor3ub(45, 45, 45);
     glBegin(GL_QUADS);
-        glVertex2f(0,  8); glVertex2f(100,  8);
-        glVertex2f(100, 30); glVertex2f(0, 30);
+        glVertex2f(0,  8);
+        glVertex2f(100,  8);
+        glVertex2f(100, 30);
+        glVertex2f(0, 30);
     glEnd();
 
     // Road edge lines yellow
@@ -327,11 +390,15 @@ void drawCar(float x, float y, float r, float g, float b, bool facingRight) {
         glColor4f(1.0f, 1.0f, 0.6f, 0.2f);
         if (facingRight) {
             glBegin(GL_TRIANGLES);
-                glVertex2f(5.5f, 1.0f); glVertex2f(18, -1); glVertex2f(18, 3);
+                glVertex2f(5.5f, 1.0f);
+                glVertex2f(18, -1);
+                glVertex2f(18, 3);
             glEnd();
         } else {
             glBegin(GL_TRIANGLES);
-                glVertex2f(-5.5f, 1.0f); glVertex2f(-18, -1); glVertex2f(-18, 3);
+                glVertex2f(-5.5f, 1.0f);
+                glVertex2f(-18, -1);
+                glVertex2f(-18, 3);
             glEnd();
         }
     }
@@ -339,26 +406,34 @@ void drawCar(float x, float y, float r, float g, float b, bool facingRight) {
     // Car body
     glColor3f(r, g, b);
     glBegin(GL_QUADS);
-        glVertex2f(-5, 0); glVertex2f(5, 0);
-        glVertex2f(5, 2.5f); glVertex2f(-5, 2.5f);
+        glVertex2f(-5, 0);
+        glVertex2f(5, 0);
+        glVertex2f(5, 2.5f);
+        glVertex2f(-5, 2.5f);
     glEnd();
 
     // Roof
     glColor3f(r * 0.75f, g * 0.75f, b * 0.75f);
     glBegin(GL_QUADS);
-        glVertex2f(-2.5f, 2.5f); glVertex2f(2.5f, 2.5f);
-        glVertex2f(2.0f,  4.2f); glVertex2f(-2.0f, 4.2f);
+        glVertex2f(-2.5f, 2.5f);
+        glVertex2f(2.5f, 2.5f);
+        glVertex2f(2.0f,  4.2f);
+        glVertex2f(-2.0f, 4.2f);
     glEnd();
 
     // Windows
     glColor3ub(180, 220, 240);
     glBegin(GL_QUADS);
-        glVertex2f(-2.3f, 2.7f); glVertex2f(-0.2f, 2.7f);
-        glVertex2f(-0.2f, 4.0f); glVertex2f(-2.3f, 4.0f);
+        glVertex2f(-2.3f, 2.7f);
+        glVertex2f(-0.2f, 2.7f);
+        glVertex2f(-0.2f, 4.0f);
+        glVertex2f(-2.3f, 4.0f);
     glEnd();
     glBegin(GL_QUADS);
-        glVertex2f(0.2f, 2.7f); glVertex2f(2.3f, 2.7f);
-        glVertex2f(2.3f, 4.0f); glVertex2f(0.2f, 4.0f);
+        glVertex2f(0.2f, 2.7f);
+        glVertex2f(2.3f, 2.7f);
+        glVertex2f(2.3f, 4.0f);
+        glVertex2f(0.2f, 4.0f);
     glEnd();
 
     // Wheels
@@ -400,8 +475,10 @@ void update(int v) {
 }
 
 void handleKey(unsigned char key, int x, int y) {
-    if (key == 'n' || key == 'N') { isNight = true;  nightLight = true;  }
-    if (key == 'd' || key == 'D') { isNight = false; nightLight = false; }
+    if (key == 'n' || key == 'N')
+        { isNight = true;  nightLight = true;  }
+    if (key == 'd' || key == 'D')
+        { isNight = false; nightLight = false; }
     glutPostRedisplay();
 }
 
