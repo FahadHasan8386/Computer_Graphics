@@ -7,7 +7,7 @@ bool nightLight = false;
 
 float cloudX1 = 10, cloudX2 = 50, cloudX3 = 80;
 float carX1 = -30.0f, carX2 = 130.0f, carX3 = -60.0f;
-float carSpeed1 = 0.3f, carSpeed2 = 0.25f, carSpeed3 = 0.2f;
+float carSpeed1 = 0.3f, carSpeed2 = 0.8f, carSpeed3 = 0.2f;
 
 void drawCircle(float cx, float cy, float r, int seg) {
     glBegin(GL_POLYGON);
